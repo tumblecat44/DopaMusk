@@ -1,5 +1,6 @@
 package com.dlrjsgml.doparich.root
 
+import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -7,6 +8,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -51,7 +55,7 @@ import com.dlrjsgml.doparich.ui.theme.caption2
 
 @Composable
 fun NavGraph(
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     val backstackEntry by navController.currentBackStackEntryAsState()
     val selectRoute = backstackEntry?.destination?.route
@@ -86,11 +90,12 @@ fun NavGraph(
                         NavCard(
                             modifier = Modifier
                                 .weight(1f)
-                                .clickable {
+                                .noRippleClickable {
                                     navController.popBackStack()
                                     navController.navigate(
                                         NavGroup.HOME
                                     )
+
                                 },
                             resId = R.drawable.ic_home,
                             isSelected = selectRoute == NavGroup.HOME
@@ -98,7 +103,7 @@ fun NavGraph(
                         NavCard(
                             modifier = Modifier
                                 .weight(1f)
-                                .clickable {
+                                .noRippleClickable {
                                     navController.popBackStack()
                                     navController.navigate(
                                         NavGroup.BOARD
@@ -110,7 +115,7 @@ fun NavGraph(
                         NavCard(
                             modifier = Modifier
                                 .weight(1f)
-                                .clickable {
+                                .noRippleClickable {
                                     navController.popBackStack()
                                     navController.navigate(
                                         NavGroup.USER
@@ -127,13 +132,12 @@ fun NavGraph(
         ) {
             NavHost(
                 modifier = Modifier
-                    .padding(it)
-                ,
+                    .padding(it),
                 navController = navController,
                 startDestination = NavGroup.LOGIN,
-                enterTransition = {EnterTransition.None},
-                exitTransition = { ExitTransition.None}
-                ) {
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
+            ) {
                 composable(NavGroup.LOGIN) {
                     LoginScreen(navController)
                 }
@@ -144,7 +148,8 @@ fun NavGraph(
                     NavGroup.HOME
                 ) {
                     val myInfo = "이건희"
-                    HomeScreen( navBottomVisible = { isShowNavBar = it },navController,
+                    HomeScreen(
+                        navBottomVisible = { isShowNavBar = it }, navController,
                         LoginViewModel()
                     )
                 }
@@ -156,7 +161,7 @@ fun NavGraph(
                 composable(NavGroup.USER) {
                     MyScreen(navController)
                 }
-                composable(NavGroup.WRITE){
+                composable(NavGroup.WRITE) {
                     WriteScreen(navController)
                 }
             }
@@ -164,6 +169,12 @@ fun NavGraph(
     }
 }
 
+@SuppressLint("ModifierFactoryUnreferencedReceiver")
+fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
+    clickable(
+        indication = null,
+        interactionSource = remember { MutableInteractionSource() }) { onClick() }
+}
 
 @Composable
 fun NavCard(
@@ -175,13 +186,14 @@ fun NavCard(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         Image(
             painter = painterResource(id = resId),
             contentDescription = null,
             colorFilter = ColorFilter.tint(if (isSelected) Blue700 else Gray600)
         )
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }

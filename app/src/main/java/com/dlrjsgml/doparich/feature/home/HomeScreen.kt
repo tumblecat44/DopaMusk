@@ -48,8 +48,6 @@ fun HomeScreen(
         LaunchedEffect(key1 = true) {
             navBottomVisible(true)
         }
-
-
         val scrollState: ScrollState = rememberScrollState()
         Column(modifier = Modifier.verticalScroll(scrollState)) {
             Spacer(modifier = Modifier.height(60.dp))
@@ -64,10 +62,17 @@ fun HomeScreen(
                 text = "최신글",
                 style = title2
             )
-            LazyColumn {
-
-            }
+//            LazyColumn {
+//                item {
+//                    ContentCards(writer = "Hlelo", content = "adadf")
+//                }
+//            }
         }
+
+
+
+
+
         Box(modifier = Modifier
             .align(Alignment.BottomEnd)
             .padding(20.dp)

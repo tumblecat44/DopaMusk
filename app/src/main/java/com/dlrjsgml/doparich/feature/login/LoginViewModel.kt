@@ -49,20 +49,19 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun upLoadData() {
-        val id = uiState.value.id
-        viewModelScope.launch {
-            try {
-                val userId = id
-                val usersInfo = RetrofitClient.infoService.getUserInfo(userId)
-                Log.d("이", "$usersInfo");
-
-
-            } catch (_: Exception) {
-                Log.d("이", "dlrjsgml44 no Ok");
-            }
-        }
-    }
+//    fun upLoadData() {
+//        val id = uiState.value.id
+//        viewModelScope.launch {
+//            try {
+//                val userId = id
+//                val usersInfo = RetrofitClient.infoService.getUserInfo(userId)
+//                Log.d("이", "$usersInfo");
+//
+//            } catch (_: Exception) {
+//                Log.d("이", "dlrjsgml44 no Ok");
+//            }
+//        }
+//    }
 
 
 

@@ -18,7 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.dlrjsgml.doparich.data.info.UserRepository
+//import com.dlrjsgml.doparich.data.info.UserRepository
 import com.dlrjsgml.doparich.root.NavGroup
 import com.dlrjsgml.doparich.ui.component.MyTextField
 import com.dlrjsgml.doparich.ui.theme.caption2
@@ -31,7 +31,7 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
-    val userRepository = UserRepository(context)
+//    val userRepository = UserRepository(context)
 
 
 
@@ -39,7 +39,6 @@ fun LoginScreen(
         viewModel.uiEffect.collect {
             when (it) {
                 is SignInSideEffect.LoginSuccess -> {
-                    viewModel.upLoadData()
                     navController.navigate(NavGroup.HOME)
                 }
 
