@@ -1,6 +1,7 @@
 package com.dlrjsgml.doparich.remote
 
 import com.dlrjsgml.doparich.data.account.AccountService
+import com.dlrjsgml.doparich.data.board.BoardService
 import com.dlrjsgml.doparich.data.info.userInfoApiService
 import com.dlrjsgml.doparich.data.login.UserService
 import com.dlrjsgml.doparich.data.write.WriteService
@@ -19,5 +20,6 @@ object RetrofitClient {
     val accountService: AccountService by lazy { instance.create(AccountService::class.java) }
     val infoService: userInfoApiService by lazy { instance.create(userInfoApiService::class.java) }
     val writeService : WriteService by lazy { instance.create(WriteService::class.java) }
+    val boardService : BoardService by lazy { instance.create(BoardService::class.java) }
 
 }

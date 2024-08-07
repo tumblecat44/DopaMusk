@@ -1,5 +1,6 @@
 package com.dlrjsgml.doparich.feature.home
 
+import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,12 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.dlrjsgml.doparich.backhandler.HomeBackOnPressed
 import com.dlrjsgml.doparich.feature.login.LoginViewModel
+import com.dlrjsgml.doparich.remote.RetrofitClient
 import com.dlrjsgml.doparich.root.NavGroup
 import com.dlrjsgml.doparich.ui.theme.content1
 import com.dlrjsgml.doparich.ui.theme.content2
+import com.dlrjsgml.doparich.ui.theme.title1
 import com.dlrjsgml.doparich.ui.theme.title2
 
 
@@ -37,41 +41,35 @@ import com.dlrjsgml.doparich.ui.theme.title2
 fun HomeScreen(
     navBottomVisible: (Boolean) -> Unit,
     navController: NavHostController,
-    loginViewModel: LoginViewModel
+    viewModel: HomeViewModel = viewModel(),
 
-) {
+    ) {
 //    val uiMainState by mainViewModel.uiState.collectAsState()
-    val uiLoginState by loginViewModel.uiState.collectAsState()
+    viewModel.getBoardContents()
+    val uiState by viewModel.uiState.collectAsState()
 
+    Log.d("글", "dlrjsgml44 ${uiState.boards}");
     Box(modifier = Modifier.fillMaxSize()){
         HomeBackOnPressed()
         LaunchedEffect(key1 = true) {
             navBottomVisible(true)
         }
-        val scrollState: ScrollState = rememberScrollState()
-        Column(modifier = Modifier.verticalScroll(scrollState)) {
-            Spacer(modifier = Modifier.height(60.dp))
+        Column() {
+            Spacer(modifier = Modifier.height(20.dp))
             Text(
-                modifier = Modifier.padding(20.dp),
-                text = "님 안녕하세요",
-                style = title2
-            )
-
-            Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(horizontal = 20.dp),
                 text = "최신글",
-                style = title2
+                style = title1
             )
-//            LazyColumn {
-//                item {
-//                    ContentCards(writer = "Hlelo", content = "adadf")
-//                }
-//            }
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyColumn {
+                items(uiState.boards.size){
+                    val item = uiState.boards[it]
+                    ContentCards(writer = item.writer, content = item.content)
+
+                }
+            }
         }
-
-
-
-
 
         Box(modifier = Modifier
             .align(Alignment.BottomEnd)
@@ -88,14 +86,18 @@ fun HomeScreen(
 
 @Composable
 fun ContentCards(writer: String,content : String) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .height(100.dp)
-        .padding(20.dp)){
-        Text(text = writer, style = content2)
-        Spacer(modifier = Modifier.height(5.dp))
-        Text(text = content, style = content1)
+    Box{
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(20.dp)){
+            Text(text = writer, style = content2)
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(text = content, style = content1)
+        }
+
     }
+
 }
 @Preview
 @Composable

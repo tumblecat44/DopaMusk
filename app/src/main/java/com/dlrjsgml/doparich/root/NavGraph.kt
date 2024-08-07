@@ -42,6 +42,7 @@ import com.dlrjsgml.doparich.R
 import com.dlrjsgml.doparich.feature.account.AccountScreen
 import com.dlrjsgml.doparich.feature.board.BoardScreen
 import com.dlrjsgml.doparich.feature.home.HomeScreen
+import com.dlrjsgml.doparich.feature.home.HomeViewModel
 import com.dlrjsgml.doparich.feature.login.LoginScreen
 import com.dlrjsgml.doparich.feature.login.LoginViewModel
 import com.dlrjsgml.doparich.feature.my.MyScreen
@@ -150,7 +151,7 @@ fun NavGraph(
                     val myInfo = "이건희"
                     HomeScreen(
                         navBottomVisible = { isShowNavBar = it }, navController,
-                        LoginViewModel()
+                        HomeViewModel()
                     )
                 }
 
