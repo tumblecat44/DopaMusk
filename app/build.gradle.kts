@@ -1,8 +1,10 @@
-import org.apache.tools.ant.util.JavaEnvUtils.VERSION_1_8
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    // STEP 1: Apply the Kotlin JVM (or Kotlin Android plugin)
+
+    id ("com.google.devtools.ksp") version "1.9.23-1.0.20"
+    id ("com.google.dagger.hilt.android")
 }
 
 android {
@@ -33,6 +35,7 @@ android {
         }
     }
     compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
@@ -42,7 +45,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     packaging {
         resources {
@@ -51,17 +54,33 @@ android {
     }
 }
 
+
 dependencies {
 
-
-    // Activity KTX for viewModels()
-    implementation (libs.androidx.activity.ktx)
-
-    //Dagger - Hilt
     implementation (libs.hilt.android)
-    implementation (libs.androidx.hilt.lifecycle.viewmodel)
-    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.appcompat)
+    ksp (libs.hilt.compiler)
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+
+    // For instrumentation tests
+    androidTestImplementation  (libs.hilt.android.testing)
+    kspAndroidTest (libs.hilt.compiler)
+
+    // For local unit tests
+    testImplementation (libs.hilt.android.testing)
+    kspTest (libs.hilt.compiler)
+
+
     implementation (libs.androidx.datastore.preferences)
+    // Lifecycle
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    // Activity KTX for viewModels()
+    implementation (libs.androidx.activity.ktx.v140)
+
+    ksp (libs.dagger.compiler.v252)
+
+
     implementation (libs.retrofit2.converter.gson)
     implementation (libs.retrofit)
     implementation(libs.androidx.core.ktx)

@@ -1,5 +1,6 @@
-package com.dlrjsgml.doparich.data.board
+package com.dlrjsgml.doparich.data.home.boardlist.board
 
+import kotlinx.coroutines.flow.StateFlow
 import retrofit2.http.GET
 
 

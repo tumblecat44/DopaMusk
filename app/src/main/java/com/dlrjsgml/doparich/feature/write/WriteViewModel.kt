@@ -2,15 +2,17 @@ package com.dlrjsgml.doparich.feature.write
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dlrjsgml.doparich.data.write.WriteDTO
+import com.dlrjsgml.doparich.data.home.boardlist.write.WriteDTO
 import com.dlrjsgml.doparich.feature.login.SignInSideEffect
 import com.dlrjsgml.doparich.remote.RetrofitClient
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class WriteState(
     val content : String ="",
@@ -21,7 +23,8 @@ sealed interface WriteSideEffect {
     data object WriteFailure : WriteSideEffect
 }
 
-class WriteViewModel : ViewModel() {
+@HiltViewModel
+class WriteViewModel @Inject constructor() : ViewModel() {
 
     private val _uiEffect = MutableSharedFlow<WriteSideEffect>()
     val uiEffect = _uiEffect.asSharedFlow()

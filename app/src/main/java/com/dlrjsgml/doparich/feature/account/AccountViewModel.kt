@@ -3,9 +3,7 @@ package com.dlrjsgml.doparich.feature.account
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dlrjsgml.doparich.data.account.NewUserDTO
-import com.dlrjsgml.doparich.feature.login.SignInSideEffect
-import com.dlrjsgml.doparich.feature.login.SingInState
+import com.dlrjsgml.doparich.data.account.newaccount.NewUserDTO
 import com.dlrjsgml.doparich.remote.RetrofitClient
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

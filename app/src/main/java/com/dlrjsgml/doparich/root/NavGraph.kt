@@ -1,6 +1,7 @@
 package com.dlrjsgml.doparich.root
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -8,7 +9,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,8 +21,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,14 +33,14 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.dlrjsgml.doparich.MainViewModel
 import com.dlrjsgml.doparich.R
 import com.dlrjsgml.doparich.feature.account.AccountScreen
-import com.dlrjsgml.doparich.feature.board.BoardScreen
+import com.dlrjsgml.doparich.feature.seueuk.BoardScreen
 import com.dlrjsgml.doparich.feature.home.HomeScreen
 import com.dlrjsgml.doparich.feature.home.HomeViewModel
 import com.dlrjsgml.doparich.feature.login.LoginScreen
@@ -51,12 +51,17 @@ import com.dlrjsgml.doparich.ui.theme.Blue700
 import com.dlrjsgml.doparich.ui.theme.Gray200
 import com.dlrjsgml.doparich.ui.theme.Gray600
 import com.dlrjsgml.doparich.ui.theme.White
-import com.dlrjsgml.doparich.ui.theme.caption2
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun NavGraph(
     navController: NavHostController,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val backstackEntry by navController.currentBackStackEntryAsState()
     val selectRoute = backstackEntry?.destination?.route
@@ -64,9 +69,15 @@ fun NavGraph(
         mutableStateOf(false)
     }
 
+    var isLogined by remember { mutableStateOf(false) }
 
+    // Use LaunchedEffect to perform the login check
+    LaunchedEffect(Unit) {
+        isLogined = viewModel.getId() != "null"
+    }
 
-
+    val startScreen = if (isLogined) NavGroup.HOME else NavGroup.LOGIN
+    Log.d("캬", "dlrjsgml44 Ok $isLogined");
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = White
@@ -135,7 +146,7 @@ fun NavGraph(
                 modifier = Modifier
                     .padding(it),
                 navController = navController,
-                startDestination = NavGroup.LOGIN,
+                startDestination = startScreen,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {

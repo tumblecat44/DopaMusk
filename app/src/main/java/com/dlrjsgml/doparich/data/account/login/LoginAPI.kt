@@ -1,4 +1,4 @@
-package com.dlrjsgml.doparich.data.login
+package com.dlrjsgml.doparich.data.account.login
 
 
 import com.dlrjsgml.doparich.data.response.SuccessResponse

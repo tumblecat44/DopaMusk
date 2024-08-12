@@ -95,7 +95,7 @@ fun AccountScreen(
             },
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text(text = "시작하기")
+            Text(text = "회원가입")
         }
     }
 

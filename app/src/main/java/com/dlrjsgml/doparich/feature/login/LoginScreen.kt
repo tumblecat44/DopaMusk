@@ -1,4 +1,6 @@
 package com.dlrjsgml.doparich.feature.login
+import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 //import com.dlrjsgml.doparich.data.info.UserRepository
@@ -23,23 +27,30 @@ import com.dlrjsgml.doparich.root.NavGroup
 import com.dlrjsgml.doparich.ui.component.MyTextField
 import com.dlrjsgml.doparich.ui.theme.caption2
 import com.dlrjsgml.doparich.ui.theme.title1
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
+
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    viewModel: LoginViewModel = viewModel(),
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 //    val userRepository = UserRepository(context)
-
-
 
     LaunchedEffect(Unit) {
         viewModel.uiEffect.collect {
             when (it) {
                 is SignInSideEffect.LoginSuccess -> {
                     navController.navigate(NavGroup.HOME)
+
                 }
 
                 SignInSideEffect.LoginFailure -> {
@@ -72,18 +83,6 @@ fun LoginScreen(
             onValueChange = viewModel::updatePw
         )
 
-        Button(
-            modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp)
-                .fillMaxWidth(),
-            onClick = {
-                navController.navigate(NavGroup.HOME)
-
-            },
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Text(text = "바로 홈가기")
-        }
 
         Spacer(modifier = Modifier.padding(top = 5.dp, start = 20.dp, end = 20.dp))
         Button(

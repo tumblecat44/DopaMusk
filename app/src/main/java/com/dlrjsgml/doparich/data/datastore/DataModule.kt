@@ -1,4 +1,4 @@
-package com.dlrjsgml.doparich.data.info
+package com.dlrjsgml.doparich.data.datastore
 
 import android.content.Context
 import dagger.Module
@@ -10,8 +10,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object UserDataModule {
+object DataModule {
+
     @Singleton
     @Provides
-    fun provideDataStoreRepository(@ApplicationContext context: Context) = UserRepository(context)
+    fun provideDataStoreRepository(@ApplicationContext context: Context)= ImplRepository(context)
 }

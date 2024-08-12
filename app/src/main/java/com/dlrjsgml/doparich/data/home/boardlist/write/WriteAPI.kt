@@ -1,4 +1,4 @@
-package com.dlrjsgml.doparich.data.write
+package com.dlrjsgml.doparich.data.home.boardlist.write
 
 import retrofit2.http.Body
 import retrofit2.http.POST
