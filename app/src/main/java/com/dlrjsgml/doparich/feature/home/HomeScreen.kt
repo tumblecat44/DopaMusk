@@ -57,6 +57,7 @@ import com.dlrjsgml.doparich.ui.theme.caption3
 import com.dlrjsgml.doparich.ui.theme.caption3Bold
 import com.dlrjsgml.doparich.ui.theme.content0
 import com.dlrjsgml.doparich.ui.theme.title1
+import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -65,10 +66,13 @@ fun HomeScreen(
     navBottomVisible: (Boolean) -> Unit,
     navController: NavHostController,
     viewModel: HomeViewModel = viewModel()
-    ) {
+) {
 
     val uiState by viewModel.uiState.collectAsState()
-    viewModel.refresh()
+    LaunchedEffect(Unit) {
+        viewModel.refresh()
+    }
+
 //    val uiMainState by mainViewModel.uiState.collectAsState()
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.isRefresh,

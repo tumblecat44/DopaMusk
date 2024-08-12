@@ -49,7 +49,7 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
-    fun refresh(){
+    fun refresh() = viewModelScope.launch(Dispatchers.IO) {
         getBoardContents()
         _uiState.update { it.copy(isRefresh = false) }
     }

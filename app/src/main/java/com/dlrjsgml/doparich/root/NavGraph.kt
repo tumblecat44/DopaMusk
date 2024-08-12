@@ -162,7 +162,6 @@ fun NavGraph(
                     val myInfo = "이건희"
                     HomeScreen(
                         navBottomVisible = { isShowNavBar = it }, navController,
-                        HomeViewModel()
                     )
                 }
 

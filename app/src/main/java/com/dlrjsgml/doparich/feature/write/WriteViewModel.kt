@@ -2,16 +2,20 @@ package com.dlrjsgml.doparich.feature.write
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dlrjsgml.doparich.data.datastore.ImplRepository
 import com.dlrjsgml.doparich.data.home.boardlist.write.WriteDTO
 import com.dlrjsgml.doparich.feature.login.SignInSideEffect
 import com.dlrjsgml.doparich.remote.RetrofitClient
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 data class WriteState(
@@ -24,7 +28,9 @@ sealed interface WriteSideEffect {
 }
 
 @HiltViewModel
-class WriteViewModel @Inject constructor() : ViewModel() {
+class WriteViewModel @Inject constructor(
+    private val implRepository: ImplRepository
+) : ViewModel() {
 
     private val _uiEffect = MutableSharedFlow<WriteSideEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
@@ -32,9 +38,9 @@ class WriteViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(WriteState())
     val uiState = _uiState.asStateFlow()
 
-    fun uploadContent(){
+    suspend fun uploadContent(){
         val writeContent = uiState.value.content
-        val writeWriter = uiState.value.writer
+        val writeWriter = getId()
 
         viewModelScope.launch {
             try{
@@ -46,7 +52,13 @@ class WriteViewModel @Inject constructor() : ViewModel() {
             }
 
         }
-
+    }
+    suspend fun getId(): String {
+        return withContext(Dispatchers.IO) {
+            // Use firstOrNull to get the first emitted value
+            val userId = implRepository.getUserId().firstOrNull()?.id ?: "null"
+            userId
+        }
     }
 
     fun updateContent(content: String){

@@ -18,14 +18,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.dlrjsgml.doparich.ui.component.MyTextField
 import com.dlrjsgml.doparich.ui.theme.title1
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun WriteScreen(navController: NavHostController,
-    viewModel: WriteViewModel = viewModel()) {
+    viewModel: WriteViewModel = hiltViewModel()
+) {
 
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
@@ -60,7 +65,9 @@ fun WriteScreen(navController: NavHostController,
                 .padding(start = 20.dp, end = 20.dp)
                 .fillMaxWidth(),
             onClick = {
-                viewModel.uploadContent()
+                CoroutineScope(Dispatchers.IO).launch{
+                    viewModel.uploadContent()
+                }
             },
             shape = RoundedCornerShape(12.dp)
         ) {
