@@ -1,7 +1,6 @@
 package com.dlrjsgml.doparich.root
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -26,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,26 +35,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
 import com.dlrjsgml.doparich.R
-import com.dlrjsgml.doparich.feature.account.AccountScreen
-import com.dlrjsgml.doparich.feature.seueuk.BoardScreen
-import com.dlrjsgml.doparich.feature.home.HomeScreen
-import com.dlrjsgml.doparich.feature.home.HomeViewModel
-import com.dlrjsgml.doparich.feature.login.LoginScreen
-import com.dlrjsgml.doparich.feature.login.LoginViewModel
-import com.dlrjsgml.doparich.feature.my.MyScreen
-import com.dlrjsgml.doparich.feature.write.WriteScreen
+import com.dlrjsgml.doparich.feature.auth.account.AccountScreen
+import com.dlrjsgml.doparich.feature.main.seueuk.BoardScreen
+import com.dlrjsgml.doparich.feature.main.board.home.HomeScreen
+import com.dlrjsgml.doparich.feature.auth.login.LoginScreen
+import com.dlrjsgml.doparich.feature.auth.login.LoginViewModel
+import com.dlrjsgml.doparich.feature.main.board.detail.DetailScreen
+import com.dlrjsgml.doparich.feature.main.my.MyScreen
+import com.dlrjsgml.doparich.feature.main.board.write.WriteScreen
 import com.dlrjsgml.doparich.ui.theme.Blue700
 import com.dlrjsgml.doparich.ui.theme.Gray200
 import com.dlrjsgml.doparich.ui.theme.Gray600
 import com.dlrjsgml.doparich.ui.theme.White
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -70,14 +69,19 @@ fun NavGraph(
     }
 
     var isLogined by remember { mutableStateOf(false) }
-
     // Use LaunchedEffect to perform the login check
     LaunchedEffect(Unit) {
         isLogined = viewModel.getId() != "null"
     }
-
     val startScreen = if (isLogined) NavGroup.HOME else NavGroup.LOGIN
-    Log.d("캬", "dlrjsgml44 Ok $isLogined");
+    val coroutineScope = rememberCoroutineScope()
+
+    val changeNavBar: (Boolean) -> Unit = {
+        coroutineScope.launch {
+            isShowNavBar = it
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = White
@@ -146,12 +150,12 @@ fun NavGraph(
                 modifier = Modifier
                     .padding(it),
                 navController = navController,
-                startDestination = startScreen,
+                startDestination = NavGroup.HOME,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
                 composable(NavGroup.LOGIN) {
-                    LoginScreen(navController)
+                    LoginScreen(navBottomVisible = changeNavBar ,navController)
                 }
                 composable(NavGroup.ACCOUNT) {
                     AccountScreen(navController)
@@ -159,13 +163,12 @@ fun NavGraph(
                 composable(
                     NavGroup.HOME
                 ) {
-                    val myInfo = "이건희"
                     HomeScreen(
-                        navBottomVisible = { isShowNavBar = it }, navController,
+                        navBottomVisible = changeNavBar, navController,
                     )
                 }
-
-                composable(NavGroup.BOARD) {
+                composable(route = NavGroup.BOARD
+                ) {
                     BoardScreen(navController)
                 }
 
@@ -175,6 +178,13 @@ fun NavGraph(
                 composable(NavGroup.WRITE) {
                     WriteScreen(navController)
                 }
+                composable("${NavGroup.DETAIL}/{id}") { backStackEntry ->
+                    val id = backStackEntry.arguments?.getString("id")
+                    if (id != null) {
+                        DetailScreen(id = id.toLong(), navController = navController)
+                    }
+                }
+
             }
         }
     }

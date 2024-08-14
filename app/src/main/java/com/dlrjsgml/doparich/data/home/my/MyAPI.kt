@@ -1,6 +1,6 @@
 package com.dlrjsgml.doparich.data.home.my
 
-import com.dlrjsgml.doparich.data.account.newaccount.NewUserDTO
+import com.dlrjsgml.doparich.data.auth.account.newaccount.NewUserDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
 

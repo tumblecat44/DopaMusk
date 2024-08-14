@@ -5,7 +5,9 @@ object NavGroup{
     const val ACCOUNT = "account"
     const val HOME = "home"
     const val BOARD = "board"
-    const val WRITE = "wirte"
+    const val WRITE = "write"
+    const val DETAIL = "detail"
+
     const val USER = "user"
 }
 
